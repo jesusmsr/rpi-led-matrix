@@ -20,7 +20,7 @@ class TestDraw(SampleBase):
         options.hardware_mapping = 'adafruit-hat'
         options.gpio_slowdown = 2
 
-        offset_canvas = self.matrix.CreateFrameCanvas()
+        offset_canvas = self.matrix.CreateFrameCanvas(options = options)
         
         while True:
             for x in range (0, self.matrix.width):
