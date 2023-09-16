@@ -1,22 +1,48 @@
 from flask import Flask
 import threading
 import queue
+import logging
+import time
+import matrix_controller
 
+
+logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
-shared_queue = queue.Queue()
 
 @app.route("/")
 def home():
-    
-    return "hola maricon"   
+    return "Started server"   
 
-
-def run_led_matrix():
-    import subprocess
-    subprocess.run(["python", "matrix-controller.py"])
+@app.route('/test')
+def test():
+    print('main')
+    try:
+        text = 'Lorem ipsum'
+        task = {'type': 'test', 'text': text}
+        matrix_controller.task_queue.put(task)
+        return 'de puta madre'
+    except Exception as e:
+        return 'oopsie'
     
-    
-led_thread = threading.Thread(target=run_led_matrix, daemon=True)
-led_thread.start()
+@app.route('/text')
+def text():
+    print('main')
+    try:
+        text = 'Lorem ipsum'
+        task = {'type': 'text', 'text': text}
+        matrix_controller.task_queue.put(task)
+        return 'Works'
+    except Exception as e:
+        return 'oopsie'
 
-app.run(debug=True)
+def led_matrix_thread():
+    while True:
+        time.sleep(1)
+        
+if __name__ == "__main__":
+    print('** Starting')
+    led_thread = threading.Thread(target=matrix_controller.main)
+    led_thread.daemon = True  # Daemonize the thread so it exits when the main program exits
+    led_thread.start()
+
+    app.run(debug=False, host='0.0.0.0')
