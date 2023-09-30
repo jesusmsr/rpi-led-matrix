@@ -20,7 +20,7 @@ def test():
         text = 'Lorem ipsum'
         task = {'type': 'test', 'text': text}
         matrix_controller.task_queue.put(task)
-        return 'de puta madre'
+        return 'done'
     except Exception as e:
         return 'oopsie'
     
